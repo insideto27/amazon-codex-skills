@@ -1,6 +1,6 @@
 # Amazon Codex Skills
 
-Private sync repository for the user's Amazon operations skills. The initial snapshot contains 81 user skills in `agents-skills/` and 4 user skills in `codex-skills/`.
+Amazon operations skills for Codex. The initial snapshot contains 81 user skills in `agents-skills/` and 4 user skills in `codex-skills/`.
 
 ## Install on another Windows computer
 
@@ -13,4 +13,4 @@ Feishu's current `AMAZON-OPS-ENTERPRISE-HUB` directory is authoritative for busi
 
 ## Repository boundary
 
-`Claude-to-IM` is intentionally excluded. The source computer's `_Collections` shortcut catalog, Codex system skills, plugin caches, local collaboration records, tokens, secrets, `.env` files, SQLite data, logs, and reports are also excluded. Keep this repository private. Review changes for credentials and machine-specific paths before pushing.
+`Claude-to-IM` is intentionally excluded. The source computer's `_Collections` shortcut catalog, Codex system skills, plugin caches, local collaboration records, tokens, secrets, `.env` files, SQLite data, logs, and reports are also excluded. Some product-specific skill references contain Feishu document links and operating context; access to those documents still depends on Feishu permissions. Review changes for credentials and machine-specific paths before pushing.
