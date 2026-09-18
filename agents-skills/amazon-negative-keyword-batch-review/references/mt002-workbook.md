@@ -1,0 +1,56 @@
+# MT002 manual negative-keyword workbook
+
+This is the MT002 binding for the batch-review skill, verified on 2026-09-18. Re-list the current Feishu directory and reread workbook metadata each run; these IDs and revisions are location aids, not permanent proof of current content. The design source is `E:\AMAZON-OPS-ENTERPRISE-HUB\00_治理与导航\04_备份与变更记录\NEG-BATCH-001-WORKFLOW-v2-人工批次否词.md`.
+
+## Current locations and contract
+
+| Resource | Current binding |
+| --- | --- |
+| [MT002 negative-keyword folder](https://hcnmweyp4l4f.feishu.cn/drive/folder/BDkTfM89al7K4MdxohYc9Y7Jnmg) | Under MT002 / `04_广告活动` / `02_否定词`. |
+| [Manual review workbook](https://hcnmweyp4l4f.feishu.cn/sheets/Iuzvsak2HhAtP0tpgzOcpK4unVf) | This is the only MT002 negative-keyword workbook. `自动广告已否定_固定基线` sheet `724e3c` is the unified, one-row-per-negative ledger: A 否定词, B 建议否定方式, C 原分类, D 来源, E 加入批次, F 投放状态, G Amazon投放日期, H 备注. Filter F for `待投放` to get every newly queued negative; after the user adds it in Amazon Ads, change F to `已投放` and fill G. `自动广告否词_横向展示` sheet `2PgOjK` is the formula-only five-column display of the ledger, grouped by C; do not type into it or use it for deduplication. `人工新增搜索词_待判断` sheet `K4EWtd` holds only human-decision items, with A 原始搜索词, B 中文翻译, C 来源广告活动, D 来源ASIN, E 判断结果, F 建议否定方式, G 备注／人工核查点, H 人工结论, I 审核日期, J 拟加入否定词. The `K1:L5` block is the legacy file-import gate. Recheck headers, IDs, and this status block on each run. |
+| [MT002 search-term report folder](https://hcnmweyp4l4f.feishu.cn/drive/folder/FMUEfbSiZliDEddfHQAc5Z1Dn0w) | `搜索词(清低效词)` contained white/black Auto and PHARSE XLSX reports at the first folder-sourced batch. Re-list on every run; a user may provide a different current report folder. |
+| [Current activity and positive-target snapshot](https://hcnmweyp4l4f.feishu.cn/sheets/I2Qysk4u4hi1QItpRyTcW0C2nxO) | Sheet `1647da`, `已开启活动与广告组`. Find the section headed `仅启用的关键词投放｜供 AI 读取` (observed at A88:I143) rather than assuming a fixed row. Read its China update time, enabled status, campaign/ad-group IDs, target ID, positive target, and match type. It is the current setting snapshot, not a performance report. |
+| [Incremental search-term workbook](https://hcnmweyp4l4f.feishu.cn/sheets/MzepshnIPhZEXbtkMabcfAcnnyg) | `MT002｜否词工作流增量搜索词`: `运行状态` (`21518d`), `监控投放` (`ag4KHh`), and `增量搜索词` (`o6I6X7`). This is the primary daily input when it contains new in-scope rows. |
+| [White backend negative folder](https://hcnmweyp4l4f.feishu.cn/drive/folder/TmT8fRJ4NlplybdmXSwcwnPNnXd) | User-confirmed Amazon-backend downloads for white Auto and PHARSE; exclusion source for their respective activities. |
+| [Black backend negative folder](https://hcnmweyp4l4f.feishu.cn/drive/folder/NzbWfiDAtlTEd1dNtvRcCjQlnEd) | User-confirmed Amazon-backend downloads for black Auto and PHARSE; exclusion source for their respective activities. |
+| [Original activity mapping](https://hcnmweyp4l4f.feishu.cn/sheets/HdcLs608xh8cnMtXUygcxgAdnfc) | Sheet `44f46d`: advertised ASIN, original campaign name, source detail filename/link. The user confirmed `MT002-EXH-AUTO 03-0901` ↔ `MT002-EXH-AUTO 03-05.xlsx` and `MT002-PHARSE-Black-A 0901` ↔ `MT002-PHARSE-small dehumidifier 0611.xlsx`. Original names and links suffice for this manual batch; do not invent numeric Amazon IDs. |
+
+On 2026-09-18, the former five-column baseline was normalized into 81 one-row ledger records. It preserves every original term and current category: `精准否定` maps to `否定精准`, `词组否定` maps to `否定词组`, `品牌词隔离` retains its phrase-negative method, `词组广告精准否定隔离` maps to `否定精准`, and the historical `超预算低效词/杂词 自动词组宽泛都隔离` list retains `按原分类待定`. All migrated rows have source `历史固定基线`, batch `2026-09-18 历史迁移`, and status `历史已收录`; they are not a new Amazon-action queue. The five original categories are projected to `自动广告否词_横向展示` by formulas in A2:E200. New normal exact and phrase recommendations must set C to `精准否定` and `词组否定` respectively, so that display remains complete; reserve the two specialized categories for evidence that supports them. The old total workbook remains retired; do not recreate it or any duplicate ledger. For future additions, `待投放` plus its `加入批次` is the sole new-item marker. The user performs Amazon Ads entry manually, then changes that row to `已投放` and fills its Amazon date. The ledger is the first exclusion check for new review candidates. A ledger text match prevents duplicate review; it is not by itself evidence that an Amazon Ads target-level action currently exists. Before the first report-sourced batch, the new-input sheet A2:H200 was empty; never assume it remains so.
+
+## Incremental data contract
+
+The upstream daily reader writes the incremental workbook from Lingxing `queryWordReports` for `MTOX-US` Sponsored Products. It monitors MT002 only, and sends a notification with the workbook link when it finds new data at its scheduled Beijing 10:00 read. This review skill is on demand: it reads the workbook but neither schedules the reader nor calls the advertising source.
+
+`增量搜索词` uses these columns: `报告日期`, campaign name/ID, ad-group name/ID, `触发投放ID`, `投放类型`, `正向投放对象`, `实际搜索词`, impressions, clicks, cost, orders, sales, and `首次写入时间`. A later read can refresh the performance fields of an existing record. Its identity and first-write time remain the screening anchors. Preserve IDs as raw text values: campaign, ad-group, and target IDs can exceed spreadsheet numeric precision. A usable row has an exact composite match to a current `监控投放` record:
+
+`(广告活动ID, 广告组ID, 触发投放ID) = (campaign_id, ad_group_id, target_id)`.
+
+The monitor is the scope authority. At the 2026-09-18 validation it contained 14 enabled target records across two Auto campaign/group scopes and two Phrase campaign/group scopes: 3 Auto rows and 11 Phrase rows. It contained no Broad target and excludes Exact and paused targets. These counts are a snapshot only; use the current monitor rows each time, rather than treating them as a permanent campaign design.
+
+For a nonempty increment, compare `首次写入时间` with the `运行状态` processed-cursor label `最近完成增量筛选截至首次写入时间`, and retain the exact source identity `(报告日期, campaign ID, ad-group ID, target ID, 实际搜索词)` for equal or out-of-order timestamps. Add or update that label only after the whole selected increment has been screened and any qualified candidates are staged in the manual workbook. The cursor proves review processing; it does not prove that Amazon Ads was changed.
+
+`报告日期` is the advertising performance day. `首次写入时间` is the data-ingestion time. They are different from the Feishu modification time of a historical XLSX upload in the report folder. The latter remains only the legacy folder-import refresh gate in the manual workbook; do not overwrite it after an incremental run.
+
+At the 2026-09-18 validation, `运行状态` set `增量报告起始日期` to 2026-09-18, `最近增量读取时间` to 2026-09-18 17:25:36, `已入表最新报告日期` to `无`, and `当前增量搜索词行数` to 0. `增量搜索词` therefore had headers only. The correct result was no incremental screening and no manual-queue write.
+
+## User-confirmed effective sources
+
+Read each workbook's metadata first, then the relevant rows. `PHARSE` is the existing filename spelling.
+
+| Color and intended activity | Source workbook | Sheet ID at last read |
+| --- | --- | --- |
+| White `B0FPQ5SNMG`, PHARSE | [PHARSE-Sponsored NGkey](https://hcnmweyp4l4f.feishu.cn/sheets/Hv16sUWljhZJ8At1M4PcOiERnPh) | `0PbgWU` |
+| White `B0FPQ5SNMG`, Auto | [Auto-Sponsored NGkey](https://hcnmweyp4l4f.feishu.cn/sheets/K8BwsyKL7hCR0itytPqctG09n4F) | `0OISju` |
+| Black `B0HDJQ3DJC`, PHARSE | [PHARSE-Sponsored NGkey](https://hcnmweyp4l4f.feishu.cn/sheets/AmQ4seLC6hD6n1tr8uOcW3s4n5g) | `0jmByz` |
+| Black `B0HDJQ3DJC`, Auto | [Auto-Sponsored NGkey](https://hcnmweyp4l4f.feishu.cn/sheets/C5Vts3Plhh0mIIt5pGBcGI8Gnpd) | `0xpHIb` |
+
+The user confirmed these four sources are actual Amazon-backend downloads of effective negatives. Do not reopen that business fact just because their sheet headers contain only keyword, translation, and negative match type. Read all four before screening report rows; the two folder URLs above take precedence over older lists. Apply a source only to its own **ASIN and activity/ad group**. The user expressly chose activity/ad-group deduplication on 2026-09-17: a negative in white Auto does not close a white PHARSE query. If the export does not show ad-group level, disclose that limit rather than asserting broader coverage.
+
+The four report files used in the 2026-09-17 rescreen contained 100 white Auto, 20 black Auto, 12 white PHARSE, and 52 black PHARSE search-term rows. They contain no broad-campaign report. They were imported to Feishu from 2026-09-17 14:22:29 through 14:22:33 Asia/Shanghai. The manual workbook's import gate records that same interval as the latest source import and the last screened import, so the current state is `无需运行：最新导入已完成筛选`. The user closed all 11 candidates from that batch on 2026-09-18 by editing E to `已覆盖` or `无需否定`; the active review rows were cleared. Do not restage those candidates solely from the same unchanged reports. A user-entered `已覆盖` remains a queue disposition, not independently verified backend application. On every run, re-list this folder and calculate the latest modification time of the in-scope report files. A later time than the last screened import triggers a new screening pass; equality does not. File import/modification time is a data-refresh signal only, not an advertising report date range. Auto is the broad search-term discovery and exclusion pass. In PHARSE/broad, read the report's **positive target keyword** and its triggered query together; first deduplicate against the unified ledger. Do not use an Auto term as a generic list to copy into PHARSE. The actual PHARSE query must independently justify a candidate that still needs human review.
+
+## Product facts and review cautions
+
+- The user's confirmation on 2026-09-17 establishes that MT002 lacks wheels, wireless/cordless operation, and remote control, shared by both colors. Charging and battery construction details remain separate unknowns; reassess if the product specification changes.
+- HEPA and other absent-feature claims, such as pump, drain hose, or humidistat, require current evidence before being treated as MT002 facts. On 2026-09-18 the user marked the current HEPA, target-humidity, and FSA queries `无需否定`; this closes those batch candidates without proving the underlying feature or eligibility.
+- A tank is a real product feature; broad `tank` negation may block valid demand. Historical `dehumidifier 1000 sq ft` was both a purchased query and a planned negative. Flag such collisions for human review without changing the ledger or assuming either historical decision is current.
+- For the current A–J review schema, translate each A query into B and record preliminary or missing-source reasoning in G. Resolve the activity from C and ASIN from D; H is available for a separate human decision, but the user also closes a batch by editing E directly. Fill J with the exact proposed negative text whenever F has a proposed method. If only A is present, use `需补来源` in E for a potential negative until the target activity is known. The prior A–H and A–I column references in historical design files are obsolete.

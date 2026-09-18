@@ -1,0 +1,32 @@
+# Credentials and local configuration
+**/.env
+**/.env.*
+!**/.env.example
+**/config.env
+**/auth.json
+**/credentials.*
+**/*secret*.json
+**/*token*.json
+
+# Runtime and business data
+**/node_modules/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/data/
+**/logs/
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.pem
+**/*.key
+**/*.pfx
+**/*.p12
+**/*qrcode*.png
+
+# Local tooling
+workspace-context/
+*.zip
+*.sha256.txt
+.DS_Store
+Thumbs.db

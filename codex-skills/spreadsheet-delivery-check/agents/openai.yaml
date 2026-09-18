@@ -1,0 +1,4 @@
+interface:
+  display_name: "表格交付复查"
+  short_description: "表格交付前自动检查公式错误、隐藏引用与关键结果回读校验"
+  default_prompt: "Use $spreadsheet-delivery-check to validate this spreadsheet before delivery."

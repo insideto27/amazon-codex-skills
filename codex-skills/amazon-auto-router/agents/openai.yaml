@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amazon Auto Router"
+  short_description: "自动识别亚马逊运营问题并路由到匹配的专业技能组合"
+  default_prompt: "分析这个亚马逊任务，自动选择并调用最相关的已安装 Amazon 技能，区分事实、假设、估算与缺失数据。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amazon Listing Workflow"
+  short_description: "Develop and version listings with relevant Amazon specialists"
+  default_prompt: "Use $amazon-listing-development-workflow to develop or optimize this Amazon listing, automatically apply the relevant specialist skills, and deliver it in the requested location."

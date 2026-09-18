@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amazon Listing Regulatory Review"
+  short_description: "Amazon listing regulatory and policy risk gate"
+  default_prompt: "Use $amazon-listing-regulatory-review to draft or revise an Amazon listing with marketplace-specific regulatory and policy review."
